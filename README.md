@@ -1,4 +1,4 @@
-# Node.js Client Library for the Copy.com API
+# Copy.com API Node.js Client Library 
 
 ## Installation
 
