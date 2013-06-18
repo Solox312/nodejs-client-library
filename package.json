@@ -1,0 +1,18 @@
+{
+	"name": "copyapi",
+	"version": "0.0.1",
+	"author": "Thomas Hunter II <tom@copy.com>",
+	"description": "Client Library for the Copy.com OAuth-based RESTful JSON API",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/copy-app/nodejs-client-library.git"
+	},
+	"dependencies": {
+		"oauth": ">=0.9.10"
+	},
+	"license": "BSD",
+	"engines": {
+		"node": ">=0.8.0"
+	},
+	"readme": "README.md"
+}
