@@ -1,5 +1,11 @@
 # Copy.com API Node.js Client Library 
 
+Welcome to the official [Copy.com](http://www.copy.com) Node.js Client Library!
+
+## Status
+
+This client library is currently in extremely early stages, and is not ready for production. For a list of all the things wrong, check out the list of [Issues](https://github.com/copy-app/nodejs-client-library/issues).
+
 ## Installation
 
 	npm install copyapi
