@@ -41,14 +41,13 @@ Once we hit version 0.3.0, it will be safe to use this Client Library in your pr
 	app.get('/get_request_token', function(req, res) {
 		console.log("GET /get_request_token");
 
-		copyapi.getRequestToken(function(error, request_token, request_secret, redirect_url) {
+		copyapi.getRequestToken(function(error, request_pair, redirect_url) {
 			if (error) { res.send("ERROR GETTING REQUEST TOKEN:\n" + error); return; }
 
 			// Store the Request Token and Request Secret in the users session
-			req.session.request_token = request_token;
-			req.session.request_secret = request_secret;
+			req.session.request_pair = request_pair;
 
-			console.log("REQUEST TOKEN: " + request_token + "\nREQUEST SECRET: " + request_secret);
+			console.log("REQUEST TOKEN: " + request_pair.token + "\nREQUEST SECRET: " + request_pair.secret);
 
 			res.redirect(redirect_url);
 		});
@@ -58,17 +57,16 @@ Once we hit version 0.3.0, it will be safe to use this Client Library in your pr
 	app.get('/get_access_token', function(req, res) {
 		console.log("GET /get_access_token");
 
-		copyapi.getAccessToken(req.session.request_token, req.session.request_secret, req.query.oauth_verifier, function(error, access_token, access_secret) {
+		copyapi.getAccessToken(req.session.request_pair, req.query.oauth_verifier, function(error, access_pair) {
 			if (error) { res.send("ERROR GETTING AT" + error); return; }
 
-			console.log("ACCESS TOKEN: " + access_token + "\nACCESS TOKEN SECRET: " + access_secret);
+			console.log("ACCESS TOKEN: " + access_pair.token + "\nACCESS TOKEN SECRET: " + access_pair.secret);
 
 			// We no longer need these request details, so lets delete them
-			delete req.session.request_token, req.session.request_secret;
+			delete req.session.request_pair;
 
 			// Storing the Access Token and Access Secret in the users session
-			req.session.access_token = access_token;
-			req.session.access_secret = access_secret;
+			req.session.access_pair = access_pair;
 
 			res.send('Done getting Access Token!<br />\n<a href="/api_call">Make an API Call</a>');
 		});
@@ -78,7 +76,7 @@ Once we hit version 0.3.0, it will be safe to use this Client Library in your pr
 	app.get('/api_call', function(req, res) {
 		console.log("GET /api_call");
 
-		copyapi.getUser(req.session.access_token, req.session.access_secret, function(error, user, code) {
+		copyapi.getUser(req.session.access_pair, function(error, user, code) {
 			if (error) { res.send("ERROR TALKING TO API:\n" + error); return; }
 
 			res.send(
