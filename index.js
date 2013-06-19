@@ -92,36 +92,69 @@ var CopyApi = function() {
 	 * @param callback The function to be executed when the request is complete
 	 */
 	self.rawRequest = function(method, endpoint, body, access_pair, callback) {
-		// TODO: Currently only works with get requests, ignoring body
-		self.oauth[method](url_api + endpoint,
-			access_pair.token, access_pair.secret,
-			function (error, data, response) {
-				if (error) {
-					// Request Error
-					callback(error);
-					return;
-				}
-
-				try {
-					var parsed_response = JSON.parse(data);
-				} catch (parse_error) {
-					// Parse Error
-					callback(parse_errore);
-				} finally {
-					callback(null, parsed_response, 200); // TODO: Get real status code
-				}
+		var intermediary_callback = function (error, data, response) {
+			if (error) {
+				// Request Error
+				callback(error, null, response.statusCode);
+				return;
 			}
-		);
+
+			try {
+				var parsed_response = JSON.parse(data);
+			} catch (parse_error) {
+				// Parse Error
+				callback(parse_errore, null, response.statusCode);
+			} finally {
+				callback(null, parsed_response, response.statusCode);
+			}
+		};
+
+		if (method == 'get' || method == 'delete') {
+			self.oauth[method](
+				url_api + endpoint,
+				access_pair.token,
+				access_pair.secret,
+				intermediary_callback
+			);
+		} else if (method == 'put' || method == 'post') {
+			self.oauth[method](
+				url_api + endpoint,
+				access_pair.token,
+				access_pair.secret,
+				JSON.stringify(body),
+				'application/json',
+				intermediary_callback
+			);
+		} else {
+			callback("INVALID METHOD " + method);
+		}
 	};
 
 	/**
 	 * Function to grab user information
-	 * @param access_token string
-	 * @param access_secret string
+	 *
+	 * @param access_pair object
 	 * @param callback function
 	 */
 	self.getUser = function(access_pair, callback) {
 		self.rawRequest('get', 'user', null, access_pair, callback);
+	};
+
+	/**
+	 * Function to update user information
+	 *
+	 * @param access_pair object
+	 * @param first_name string
+	 * @param last_name string
+	 * @param callback function
+	 */
+	self.setUser = function(access_pair, first_name, last_name, callback) {
+		var body = {
+			first_name: first_name,
+			last_name: last_name,
+		};
+
+		self.rawRequest('put', 'user', body, access_pair, callback);
 	};
 };
 

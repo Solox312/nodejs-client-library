@@ -68,13 +68,13 @@ Once we hit version 0.3.0, it will be safe to use this Client Library in your pr
 			// Storing the Access Token and Access Secret in the users session
 			req.session.access_pair = access_pair;
 
-			res.send('Done getting Access Token!<br />\n<a href="/api_call">Make an API Call</a>');
+			res.send('Done getting Access Token!<br />\n<a href="/api_call_get_user">Make an API Call</a>');
 		});
 	});
 
 	// Here we make a sample API call
-	app.get('/api_call', function(req, res) {
-		console.log("GET /api_call");
+	app.get('/api_call_get_user', function(req, res) {
+		console.log("GET /api_call_get_user");
 
 		copyapi.getUser(req.session.access_pair, function(error, user, code) {
 			if (error) { res.send("ERROR TALKING TO API:\n" + error); return; }
@@ -82,6 +82,20 @@ Once we hit version 0.3.0, it will be safe to use this Client Library in your pr
 			res.send(
 				"Name: " + user.first_name + " " + user.last_name + "<br />\n" + 
 				"Usage: " + ((user.storage.used / user.storage.quota) * 100).toFixed(2) + "%<br />\n"
+			);
+		});
+	});
+
+	app.get('/api_call_set_user/:first_name/:last_name', function(req, res) {
+		console.log("GET /api_call_set_user");
+		console.log("FIRST_NAME: " + req.params.first_name);
+		console.log("LAST_NAME: " + req.params.last_name);
+
+		copyapi.setUser(req.session.access_pair, req.params.first_name, req.params.last_name, function(error, user, code) {
+			if (error) { res.send("ERROR TALKING TO API:\n" + error); return; }
+
+			res.send(
+				"Name: " + user.first_name + " " + user.last_name + "<br />\n"
 			);
 		});
 	});
