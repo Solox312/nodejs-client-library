@@ -57,21 +57,30 @@ var CopyApi = function() {
 				return;
 			}
 
-			callback(error, request_token, request_secret, url_authorize + '?oauth_token=' + request_token);
+			var request_pair = {
+				token: request_token,
+				secret: request_secret
+			};
+
+			callback(error, request_pair, url_authorize + '?oauth_token=' + request_token);
 		});
 	};
 
 	/**
 	 * Asks the Copy API for an Access Token
 	 */
-	self.getAccessToken = function(request_token, request_secret, verifier, callback) {
-		self.oauth.getOAuthAccessToken(request_token, request_secret, verifier, function(error, access_token, access_secret) {
+	self.getAccessToken = function(request_pair, verifier, callback) {
+		self.oauth.getOAuthAccessToken(request_pair.token, request_pair.secret, verifier, function(error, access_token, access_secret) {
 			if (error) {
 				callback(error);
 				return;
 			}
 
-			callback(null, access_token, access_secret);
+			var access_pair = {
+				token: access_token,
+				secret: access_secret,
+			};
+			callback(null, access_pair);
 		});
 	};
 
@@ -82,10 +91,10 @@ var CopyApi = function() {
 	 * @param body The request body (used for POST and PUT requests)
 	 * @param callback The function to be executed when the request is complete
 	 */
-	self.rawRequest = function(method, endpoint, body, access_token, access_secret, callback) {
+	self.rawRequest = function(method, endpoint, body, access_pair, callback) {
 		// TODO: Currently only works with get requests, ignoring body
 		self.oauth[method](url_api + endpoint,
-			access_token, access_secret,
+			access_pair.token, access_pair.secret,
 			function (error, data, response) {
 				if (error) {
 					// Request Error
@@ -111,8 +120,8 @@ var CopyApi = function() {
 	 * @param access_secret string
 	 * @param callback function
 	 */
-	self.getUser = function(access_token, access_secret, callback) {
-		self.rawRequest('get', 'user', null, access_token, access_secret, callback);
+	self.getUser = function(access_pair, callback) {
+		self.rawRequest('get', 'user', null, access_pair, callback);
 	};
 };
 
