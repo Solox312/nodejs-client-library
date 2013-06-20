@@ -100,6 +100,17 @@ Once we hit version 0.3.0, it will be safe to use this Client Library in your pr
 		});
 	});
 
+	app.get('/api_call_get_path/*', function(req, res) {
+		console.log("GET /api_call_get_path");
+		console.log("PATH: " + req.params[0]);
+
+		copyapi.getPath(req.session.access_pair, req.params[0], function(error, data) {
+			if (error) { res.send("ERROR TALKING TO API:\n" + error); return; }
+
+			res.send(data);
+		});
+	});
+
 	app.listen(port);
 
 ## License

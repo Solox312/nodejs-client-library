@@ -131,7 +131,7 @@ var CopyApi = function() {
 	};
 
 	/**
-	 * Function to grab user information
+	 * Get information about the user
 	 *
 	 * @param access_pair object
 	 * @param callback function
@@ -141,7 +141,7 @@ var CopyApi = function() {
 	};
 
 	/**
-	 * Function to update user information
+	 * Update information about the user
 	 *
 	 * @param access_pair object
 	 * @param first_name string
@@ -155,6 +155,20 @@ var CopyApi = function() {
 		};
 
 		self.rawRequest('put', 'user', body, access_pair, callback);
+	};
+
+	/**
+	 * Get information about the filesystem
+	 *
+	 * @param access_pair object
+	 * @param path string
+	 * @callback function
+	 */
+	self.getPath = function(access_pair, path, callback) {
+		if (path[0] == '/') path = path.substring(1); // Remove leading slash if present
+		if (path[path.length-1] == '/') path = path.substring(0, path.length-1); // Remove trailing slash if present
+
+		self.rawRequest('get', 'meta/copy/' + path, null, access_pair, callback);
 	};
 };
 
