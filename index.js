@@ -48,12 +48,12 @@ var CopyApi = function() {
 			oauth_callback: self.callback_url
 		}, function(error, request_token, request_secret) {
 			if (error) {
-				callback(error);
+				if (typeof callback === "function") callback(error);
 				return;
 			}
 
 			if (!request_token || !request_secret) {
-				callback("Invalid Request Token or Request Secret from server: Token: " + request_token + ", Secret: " + request_secret);
+				if (typeof callback === "function") callback("Invalid Request Token or Request Secret from server: Token: " + request_token + ", Secret: " + request_secret);
 				return;
 			}
 
@@ -62,7 +62,7 @@ var CopyApi = function() {
 				secret: request_secret
 			};
 
-			callback(error, request_pair, url_authorize + '?oauth_token=' + request_token);
+			if (typeof callback === "function") callback(error, request_pair, url_authorize + '?oauth_token=' + request_token);
 		});
 	};
 
@@ -72,7 +72,7 @@ var CopyApi = function() {
 	self.getAccessToken = function(request_pair, verifier, callback) {
 		self.oauth.getOAuthAccessToken(request_pair.token, request_pair.secret, verifier, function(error, access_token, access_secret) {
 			if (error) {
-				callback(error);
+				if (typeof callback === "function") callback(error);
 				return;
 			}
 
@@ -80,7 +80,7 @@ var CopyApi = function() {
 				token: access_token,
 				secret: access_secret,
 			};
-			callback(null, access_pair);
+			if (typeof callback === "function") callback(null, access_pair);
 		});
 	};
 
@@ -95,7 +95,7 @@ var CopyApi = function() {
 		var intermediary_callback = function (error, data, response) {
 			if (error) {
 				// Request Error
-				callback(error, null, response.statusCode);
+				if (typeof callback === "function") callback(error, null, response.statusCode);
 				return;
 			}
 
@@ -103,9 +103,9 @@ var CopyApi = function() {
 				var parsed_response = JSON.parse(data);
 			} catch (parse_error) {
 				// Parse Error
-				callback(parse_errore, null, response.statusCode);
+				if (typeof callback === "function") callback(parse_errore, null, response.statusCode);
 			} finally {
-				callback(null, parsed_response, response.statusCode);
+				if (typeof callback === "function") callback(null, parsed_response, response.statusCode);
 			}
 		};
 
@@ -126,7 +126,7 @@ var CopyApi = function() {
 				intermediary_callback
 			);
 		} else {
-			callback("INVALID METHOD " + method);
+			if (typeof callback === "function") callback("INVALID METHOD " + method);
 		}
 	};
 
