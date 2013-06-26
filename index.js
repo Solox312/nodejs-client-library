@@ -170,6 +170,23 @@ var CopyApi = function() {
 
 		self.rawRequest('get', 'meta/copy/' + path, null, access_pair, callback);
 	};
+
+	/**
+	 * Get information about the users inbox. The path is a slash separated values. Leave it blank for a listing of top-level items.
+	 * If you'd like to look into individual items, the first component is the link token, followed by more specific paths.
+	 * Basically, just look at the *path* attribute in the responses, just like with the other filesystem calls.
+	 *
+	 * @param access_pair object
+	 * @param path string
+	 * @callback function
+	 */
+	self.getInbox = function(access_pair, path, callback) {
+		if (path[0] == '/') path = path.substring(1); // Remove leading slash if present
+		if (path[path.length-1] == '/') path = path.substring(0, path.length-1); // Remove trailing slash if present
+
+		self.rawRequest('get', 'meta/inbox/' + path, null, access_pair, callback);
+	};
+
 };
 
 module.exports = new CopyApi();

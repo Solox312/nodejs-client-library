@@ -114,6 +114,17 @@ app.get('/api_call_get_path/*', function(req, res) {
 	});
 });
 
+app.get('/api_call_get_inbox/*', function(req, res) {
+	console.log("GET /api_call_get_inbox");
+	console.log("PATH: " + req.params[0]);
+
+	copyapi.getInbox(req.session.access_pair, req.params[0], function(error, data) {
+		if (error) { res.send("ERROR TALKING TO API:\n" + error); return; }
+
+		res.send(data);
+	});
+});
+
 app.listen(port);
 ```
 
