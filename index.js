@@ -1,12 +1,12 @@
-var OAuth = require('OAuth');
+var OAuth = require('oauth');
 
 var CopyApi = function() {
 	var self = this;
 
-	var url_api 			= 'http://api.copy.local/rest/',
-		url_request 		= 'http://api.copy.local/oauth/request',
-		url_access 			= 'http://api.copy.local/oauth/access',
-		url_authorize		= 'http://www.copy.local/applications/authorize',
+	var url_api 			= 'https://api.copy.com/rest/',
+		url_request 		= 'https://api.copy.com/oauth/request',
+		url_access 			= 'https://api.copy.com/oauth/access',
+		url_authorize		= 'https://www.copy.com/applications/authorize',
 		oauth 				= null;
 
 	self.oauth = null;
