@@ -1,6 +1,6 @@
 {
 	"name": "copyapi",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": "Thomas Hunter II <tom@copy.com>",
 	"description": "Client Library for the Copy.com OAuth-based RESTful JSON API",
 	"repository": {
