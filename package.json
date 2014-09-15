@@ -1,0 +1,28 @@
+{
+  "name": "npm-copy-api",
+  "version": "0.0.1",
+  "description": "javascript client for copy api",
+  "main": "copyapi.js",
+  "dependencies": {
+    "extend": "^1.3.0",
+    "md5-jkmyers": "0.0.1",
+    "promised-io": "^0.3.4",
+    "request": "^2.42.0",
+    "sha1": "^1.1.0",
+    "streamifier": "^0.1.0"
+  },
+  "devDependencies": {
+    "vows": "^0.7.0"
+  },
+  "scripts": {
+    "test": "vows --spec"
+  },
+  "keywords": [
+    "copy",
+    "api",
+    "file",
+    "storage"
+  ],
+  "author": "Daniel Bergey",
+  "license": "MIT"
+}
