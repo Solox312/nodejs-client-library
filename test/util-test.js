@@ -6,21 +6,6 @@ var vows = require('vows'),
     util = require('../lib/util').Util;
 
 vows.describe('Utility Functions').addBatch({
-	'When using the post function': {
-		topic: util,
-		'we get expected response from an API post': function(topic) {
-			assert.deepEqual(topic.post('update_objects', { derp: 1 }, false, true),
-				{
-					options: {
-				        method: 'POST',
-				        headers: topic.getHeaders('update_objects'),
-				        url: topic.apiHost + '/jsonrpc',
-				        body: { derp: 1 }
-					}
-				}
-			);
-		}
-	},
 	'When using the getHeaders function': {
 		topic: util,
 		'we get expected headers for a normal method': function (topic) {
@@ -43,7 +28,20 @@ vows.describe('Utility Functions').addBatch({
 				'jsonrpc_binary');
 		}
 	},
-    'When using the encodeRequest function': {
+ 	'When using the post function': {
+		topic: util,
+		'we get expected response from an API post': function(topic) {
+			assert.deepEqual(topic.post('update_objects', { derp: 1 }, false, true),
+				{ options: {
+			        method: 'POST',
+			        headers: topic.getHeaders('update_objects'),
+			        url: topic.apiHost + '/jsonrpc',
+			        body: { derp: 1 }
+				} }
+			);
+		}
+	},
+   'When using the encodeRequest function': {
         topic: util,
         'we get a valid JSON from a method and params': function (topic) {
             assert.equal(topic.encodeRequest('do_thing', { key1: 'value1', key2: 'value2' }),
@@ -55,13 +53,20 @@ vows.describe('Utility Functions').addBatch({
         }
 
     },
-    // 'When using the decodeResponse function': {
-    //     topic: util,
-    //     'we get a valid object from an API response': function (response) {
-    //         assert.equal(util.encodeRequest(method, params),
-    //         	'');
-    //     }
-    // },
+    'When using the decodeResponse function': {
+        topic: util,
+        'we get a valid object from an API response': function (topic) {
+			assert.deepEqual(topic.decodeResponse('{"jsonrpc":"2.0","id":0,"result":[{}]}'),
+            	{ jsonrpc: '2.0', id: 0, 'result': [ { } ] });
+        },
+        'we get a valid API response with an error code': function(topic) {
+    		// TODO use assert.throws here instead of try/catch
+        	try {
+	        	assert.deepEqual(topic.decodeResponse('{"jsonrpc":"2.0","id":"0","error":{"code":"1001","message":"the message"}}'),
+	        		{ jsonrpc: '2.0', id: 0, error: 1001, message: 'the message' });
+	        } catch(e) {}
+        }
+    },
     'When using the fingerprint function': {
         topic: util,
         'we get the expected fingerprint from a 0-byte string': function(topic) {
